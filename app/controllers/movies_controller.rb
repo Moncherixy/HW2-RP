@@ -13,23 +13,7 @@ class MoviesController < ApplicationController
     @movies = Movie.all
 
   #part 1
-    if params[:choose_title]=='yes'
-      session[:title]='hilite'
-      session[:release_date]=""
-    elsif params[:choose_release_date]=="yes"
-      session[:title]=""
-      session[:release_date]="hilite"
-    else
-      session[:title]=""
-      session[:release_date]=""
-    end
- 
-    if session[:title]=="hilite"
-     @movies = @movies.all.order(:title)
-    elsif session[:release_date]=="hilite"
-     @movies = @movies.all.order(:release_date)
-    end 
-    
+
   #part 2
 
   end
