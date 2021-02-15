@@ -6,10 +6,8 @@
   Include:
   <% @all_ratings.each do |rating| %>
     <div class="form-check  form-check-inline">
-      <% if rating != nil %>
-        <%= label_tag "ratings[#{rating}]", rating, class: 'form-check-label' %>
-        <%= check_box_tag "ratings[#{rating}]", "1",  @ratings_to_show.include?(rating), class: 'form-check-input' %>
-      <% end %>
+      <%= label_tag "ratings[#{rating}]", rating, class: 'form-check-label' %>
+      <%= check_box_tag "ratings[#{rating}]", "1",  @ratings_to_show.include?(rating), class: 'form-check-input' %>
     </div>
   <% end %>
   <%= submit_tag 'Refresh', id: 'ratings_submit', class: 'btn btn-primary' %>
