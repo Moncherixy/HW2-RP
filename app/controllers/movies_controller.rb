@@ -11,44 +11,38 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
-
-  #part 1
-    @sort = params[:sort]
-    # @movies = Movie.order(params[:sort])
-    # @movies = @movies.where(:rating => params[:ratings].keys) if params[:ratings].present?
-    session.delete(:sorting_user)
-    @all_ratings = Movie.distinct.pluck(:rating)
-    @movies = Movie.all
-
-    unless params[:ratings].nil?
-      @selected_ratings = params[:ratings]
-      session[:selected_ratings] = @selected_ratings
+    @all_ratings = ['G', 'PG', 'PG-13', 'R']
+    @sort = params[:sort] || session[:sort]
+    @checked_ratings = params[:ratings] || session[:ratings]
+    
+    if !@checked_ratings
+      session[:ratings] = {}
+      @all_ratings.each do |rating|
+        session[:ratings][rating] = 1
+      end
+      @checked_ratings = session[:ratings]
     end
-
-    if params[:sorting_user].nil?
-      #
-    else
-      session[:sorting_user] = params[:sorting_user]
-    end
-
-    if params[:sorting_user].nil? && params[:ratings].nil? && session[:selected_ratings]
-      @selected_ratings = session[:selected_ratings]
-      @sorting_user = session[:sorting_user]
+    
+    if !(params[:sort] == session[:sort] && params[:ratings] == session[:ratings])
+      params[:sort] = session[:sort] = @sort
+      params[:ratings] = session[:ratings] = @checked_ratings
       flash.keep
-      redirect_to movies_path({order_by: @sorting_user, ratings: @selected_ratings})
+      redirect_to movies_path(:sort=>params[:sort], :ratings =>params[:ratings])
     end
+    
+    @boxes = {}
+    @all_ratings.each do |rating|
+      @boxes[rating] = !@checked_ratings.nil? && @checked_ratings.keys.include?(rating)
+    end
+    session[:sort] = @sort
+    session[:ratings] = @checked_ratings
+    
+    @movies = Movie.order @sort
+    if @checked_ratings
+      @movies = Movie.where(:rating => @checked_ratings.keys).order @sort
+    end
+  #part 1
 
-    if session[:selected_ratings]
-      @movies = @movies.select{ |movie| session[:selected_ratings].include? movie.rating }
-    end
-
-    if session[:sorting_user] == "title"
-      @movies = @movies.sort { |a,b| a.title <=> b.title }
-      @movie_column_class = "hilite"
-    elsif session[:sorting_user] == "release_date"
-      @movies = @movies.sort { |a,b| a.release_date <=> b.release_date }
-      @date_column_class = "hilite"
-    end
 
   #part 2
 
