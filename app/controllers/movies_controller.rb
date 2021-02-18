@@ -40,7 +40,8 @@ class MoviesController < ApplicationController
     if @checked_ratings
       @movies = Movie.where(:rating => @checked_ratings.keys).order @sort
     end
-    
+    @movies = @movies.uniq
+    @ratings_to_show = @rating_array.uniq
   end
 
   def new
