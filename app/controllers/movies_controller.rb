@@ -10,66 +10,35 @@ class MoviesController < ApplicationController
   end
 
   def index
-    #part 1
-    @movies = Movie.all
+    @all_ratings = ['G', 'PG', 'PG-13', 'R']
+    @sort = params[:sort] || session[:sort]
+    @checked_ratings = params[:ratings] || session[:ratings]
     
-    if params[:choose_title]=='yes'
-      session[:title]='hilite'
-      session[:release_date]=""
-    elsif params[:choose_release_date]=="yes"
-      session[:title]=""
-      session[:release_date]="hilite"
-    else
-      session[:title]=""
-      session[:release_date]=""
-    end
- 
-    if session[:title]=="hilite"
-     @movies = @movies.all.order(:title)
-    elsif session[:release_date]=="hilite"
-     @movies = @movies.all.order(:release_date)
-    end
-  
-  #part 2
-  #enumerable collection of all possible values of a movie rating
-   @all_ratings = Movie.distinct.pluck(:rating)
-    
-    if params[:ratings]!=nil
-     session[:checked]=params[:ratings]
-    end
-    
-    
-    if params[:ratings]!=nil
-      @movies = Movie.where(rating: params[:ratings].keys)
-      session[:checked]=params[:ratings]
-    elsif params[:commit]=='Refresh'
-      @movie = Movie.all
-      params[:ratings] = Hash[@all_ratings.map{|rating| [rating, "1"]}]
-      session[:checked]=params[:ratings]
-    end
-      
-  #part 3
-    if session[:checked]==nil
-      session[:checked]=Hash.new()
+    if !@checked_ratings
+      session[:ratings] = {}
       @all_ratings.each do |rating|
-      session[:checked][rating]=1
+        session[:ratings][rating] = 1
       end
+      @checked_ratings = session[:ratings]
     end
     
-    #returns an appropriate value for this collection.
-    @movies = @movies.where({rating: session[:checked].keys})
-    
-    #combine two
-    if session[:title]=="hilite" and params[:choose_title]==nil 
-      params[:choose_title]="yes"
-      redirect_to movies_path(params)
-    elsif session[:release_date]=="hilite" and params[:choose_release_date]==nil
-      params[:choose_release_date]="yes"
-      redirect_to movies_path(params)
-    elsif params[:ratings]==nil and session[:checked]!=nil
-      params[:ratings]=session[:checked]
+    if !(params[:sort] == session[:sort] && params[:ratings] == session[:ratings])
+      params[:sort] = session[:sort] = @sort
+      params[:ratings] = session[:ratings] = @checked_ratings
       flash.keep
-      redirect_to movies_path(params)
+      redirect_to movies_path(:sort=>params[:sort], :ratings =>params[:ratings])
+    end
+    
+    @boxes = {}
+    @all_ratings.each do |rating|
+      @boxes[rating] = !@checked_ratings.nil? && @checked_ratings.keys.include?(rating)
+    end
+    session[:sort] = @sort
+    session[:ratings] = @checked_ratings
+    
+    @movies = Movie.order @sort
+    if @checked_ratings
+      @movies = Movie.where(:rating => @checked_ratings.keys).order @sort
     end
     
   end
