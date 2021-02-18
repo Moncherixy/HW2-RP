@@ -22,6 +22,9 @@
       <% end %>
       <th><%=link_to "Movie Title", :sort=>'title', id:"title_header"%> </th>    
       <th>Rating</th>
+      <% if params[:sort] == "release_date"  %>
+        <% #class = "hilite" %>
+      <% end %>
       <th><%= link_to "Release Data", :sort=>'release_date', id:"release_date_header"%> </th>
       <th>More Info</th>
     </tr>
