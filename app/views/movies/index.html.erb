@@ -17,14 +17,14 @@
 <table class="table table-striped col-md-12" id="movies">
   <thead>
     <tr>
-      <% if params[:sort] == "title"  %>
+      <!--<% if params[:sort] == "title"  %>-->
         <% #class = "hilite" %>
-      <% end %>
+      <!--<% end %>-->
       <th><%=link_to "Movie Title", :sort=>'title', id:"title_header"%> </th>    
       <th>Rating</th>
-      <% if params[:sort] == "release_date"  %>
+      <!--<% if params[:sort] == "release_date"  %>-->
         <% #class = "hilite" %>
-      <% end %>
+      <!--<% end %>-->
       <th><%= link_to "Release Data", :sort=>'release_date', id:"release_date_header"%> </th>
       <th>More Info</th>
     </tr>
