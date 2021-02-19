@@ -40,14 +40,26 @@ class MoviesController < ApplicationController
     session[:sort] = @sort
     session[:ratings] = @checked_ratings
     
+    
     @movies = Movie.order @sort
     if @checked_ratings
       @movies = Movie.where(:rating => @checked_ratings.keys).order @sort
     end
     
+    if params[:sort] == "title"
+      @TitleClass = "hilite"
+      @ReleaseDateClass = ""
+    elsif params[:sort] == "release_date"
+      @TitleClass = ""
+      @ReleaseDateClass = "hilite"
+    else
+      @TitleClass = ""
+      @ReleaseDateClass = ""
+    end
+    
     @rating_array = []
-    @movies.each do |m_table|
-      @rating_array << m_table[:rating]
+    @movies.each do |movie_table|
+      @rating_array << movie_table[:rating]
     end
     
     @movies = @movies.uniq
