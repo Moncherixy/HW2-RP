@@ -64,7 +64,7 @@ class MoviesController < ApplicationController
     end
     
     @movies = @movies.distinct
-    @ratings_to_show = @rating_array.distinct
+    @ratings_to_show = @rating_array.uniq
   end
 
   def new
