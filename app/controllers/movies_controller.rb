@@ -10,8 +10,10 @@ class MoviesController < ApplicationController
   end
 
   def index
+    @movies = Movie.all
     @all_ratings = ['G', 'PG', 'PG-13', 'R']
     @sort = params[:sort] || session[:sort]
+    @ratings_to_show = @all_ratings
     @checked_ratings = params[:ratings] || session[:ratings]
     
     if !@checked_ratings
@@ -21,6 +23,7 @@ class MoviesController < ApplicationController
       end
       @checked_ratings = session[:ratings]
     end
+    
     
     if !(params[:sort] == session[:sort] && params[:ratings] == session[:ratings])
       params[:sort] = session[:sort] = @sort
@@ -40,6 +43,12 @@ class MoviesController < ApplicationController
     if @checked_ratings
       @movies = Movie.where(:rating => @checked_ratings.keys).order @sort
     end
+    
+    @rating_array = []
+    @movies.each do |m_table|
+      @rating_array << m_table[:rating]
+    end
+    
     @movies = @movies.uniq
     @ratings_to_show = @rating_array.uniq
   end
