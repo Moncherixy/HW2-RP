@@ -16,6 +16,10 @@ class MoviesController < ApplicationController
     @ratings_to_show = @all_ratings
     @checked_ratings = params[:ratings] || session[:ratings]
     
+    if session[:ratings].blank? or params[:commit] != nil
+      session[:ratings] = boxChecked
+    end
+    
     if !@checked_ratings
       session[:ratings] = {}
       @all_ratings.each do |rating|
@@ -80,6 +84,13 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
-
+  
+  private def CheckedBoxes
+    #read from params  to fill in cookies
+    if params[:ratings] == nil
+      return []
+    end
+    return params[:ratings]
+  end
 
 end
