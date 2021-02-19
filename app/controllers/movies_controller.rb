@@ -36,6 +36,7 @@ class MoviesController < ApplicationController
     @all_ratings.each do |rating|
       @boxes[rating] = !@checked_ratings.nil? && @checked_ratings.keys.include?(rating)
     end
+    
     session[:sort] = @sort
     session[:ratings] = @checked_ratings
     
@@ -44,13 +45,13 @@ class MoviesController < ApplicationController
       @movies = Movie.where(:rating => @checked_ratings.keys).order @sort
     end
     
-    @rating_array = []
-    @movies.each do |m_table|
-      @rating_array << m_table[:rating]
-    end
+    # @rating_array = []
+    # @movies.each do |m_table|
+    #   @rating_array << m_table[:rating]
+    # end
     
     @movies = @movies.uniq
-    @ratings_to_show = @rating_array.uniq
+    @ratings_to_show = @boxes.uniq
   end
 
   def new
