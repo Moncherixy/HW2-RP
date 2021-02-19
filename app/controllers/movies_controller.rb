@@ -11,7 +11,7 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
-    @all_ratings = ['G', 'PG', 'PG-13', 'R']
+    @all_ratings = Movie.all_ratings
     @sort = params[:sort] || session[:sort]
     @ratings_to_show = @all_ratings
     @checked_ratings = params[:ratings] || session[:ratings]
@@ -45,6 +45,7 @@ class MoviesController < ApplicationController
     if @checked_ratings
       @movies = Movie.where(:rating => @checked_ratings.keys).order @sort
     end
+    
     
     if params[:sort] == "title"
       @TitleClass = "hilite"
