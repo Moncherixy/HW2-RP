@@ -45,13 +45,13 @@ class MoviesController < ApplicationController
       @movies = Movie.where(:rating => @checked_ratings.keys).order @sort
     end
     
-    # @rating_array = []
-    # @movies.each do |m_table|
-    #   @rating_array << m_table[:rating]
-    # end
+    @rating_array = []
+    @movies.each do |m_table|
+      @rating_array << m_table[:rating]
+    end
     
     @movies = @movies.uniq
-    @ratings_to_show = @boxes.uniq
+    @ratings_to_show = @rating_array.uniq
   end
 
   def new
