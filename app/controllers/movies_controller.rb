@@ -10,6 +10,7 @@ class MoviesController < ApplicationController
   end
 
   def index
+    
     @movies = Movie.all
     @all_ratings = Movie.all_ratings
     @sort = params[:sort] || session[:sort]
@@ -32,10 +33,6 @@ class MoviesController < ApplicationController
       redirect_to movies_path(:sort=>params[:sort], :ratings =>params[:ratings])
     end
     
-    @boxes = {}
-    @all_ratings.each do |rating|
-      @boxes[rating] = !@checked_ratings.nil? && @checked_ratings.keys.include?(rating)
-    end
     
     session[:sort] = @sort
     session[:ratings] = @checked_ratings
@@ -58,13 +55,13 @@ class MoviesController < ApplicationController
       @ReleaseDateClass = ""
     end
     
-    # @rating_array = []
-    # @movies.each do |movie_table|
-    #   @rating_array << movie_table[:rating]
-    # end
+    @rating_array = []
+    @movies.each do |movie_table|
+      @rating_array << movie_table[:rating]
+    end
     
     @movies = @movies.uniq
-    @ratings_to_show = @boxes.uniq
+    @ratings_to_show = @rating_array.uniq
   end
 
   def new
@@ -94,6 +91,5 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
-
 
 end
