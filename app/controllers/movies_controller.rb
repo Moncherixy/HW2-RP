@@ -63,8 +63,8 @@ class MoviesController < ApplicationController
       @rating_array << movie_table[:rating]
     end
     
-    @movies = @movies.uniq
-    @ratings_to_show = @rating_array.uniq
+    @movies = @movies.distinct
+    @ratings_to_show = @rating_array.distinct
   end
 
   def new
