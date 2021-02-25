@@ -12,7 +12,7 @@ class MoviesController < ApplicationController
   def index
     
     @movies = Movie.all
-    @all_ratings = Movie.all_ratings
+    @all_ratings = ['G', 'PG', 'PG-13', 'R']
     @sort = params[:sort] || session[:sort]
     @ratings_to_show = @all_ratings
     @checked_ratings = params[:ratings] || session[:ratings]
@@ -33,15 +33,19 @@ class MoviesController < ApplicationController
       redirect_to movies_path(:sort=>params[:sort], :ratings =>params[:ratings])
     end
     
+    @rating_array = {}
+    @all_ratings.each do |rating|
+      @rating_array[rating] = !@checked_ratings.nil? && @checked_ratings.keys.include?(rating)
+    end
     
     session[:sort] = @sort
     session[:ratings] = @checked_ratings
     
     
-    # @movies = Movie.order @sort
-    # if @checked_ratings
-    #   @movies = Movie.where(:rating => @checked_ratings.keys).order @sort
-    # end
+    @movies = Movie.order @sort
+    if @checked_ratings
+      @movies = Movie.where(:rating => @checked_ratings.keys).order @sort
+    end
     
     
     if params[:sort] == "title"
@@ -55,13 +59,13 @@ class MoviesController < ApplicationController
       @ReleaseDateClass = ""
     end
     
-    @rating_array = []
-    @movies.each do |movie_table|
-      @rating_array << movie_table[:rating]
-    end
+    # @rating_array = []
+    # @movies.each do |movie_table|
+    #   @rating_array << movie_table[:rating]
+    # end
     
-    # @movies = @movies.uniq
-    # @ratings_to_show = @rating_array.uniq
+    @movies = @movies.uniq
+    @ratings_to_show = @rating_array.uniq
   end
 
   def new
