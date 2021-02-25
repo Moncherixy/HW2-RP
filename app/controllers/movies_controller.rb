@@ -38,10 +38,10 @@ class MoviesController < ApplicationController
     session[:ratings] = @checked_ratings
     
     
-    @movies = Movie.order @sort
-    if @checked_ratings
-      @movies = Movie.where(:rating => @checked_ratings.keys).order @sort
-    end
+    # @movies = Movie.order @sort
+    # if @checked_ratings
+    #   @movies = Movie.where(:rating => @checked_ratings.keys).order @sort
+    # end
     
     
     if params[:sort] == "title"
