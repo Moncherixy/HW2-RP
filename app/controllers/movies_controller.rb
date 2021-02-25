@@ -33,10 +33,10 @@ class MoviesController < ApplicationController
       redirect_to movies_path(:sort=>params[:sort], :ratings =>params[:ratings])
     end
     
-    @rating_array = {}
-    @all_ratings.each do |rating|
-      @rating_array[rating] = !@checked_ratings.nil? && @checked_ratings.keys.include?(rating)
-    end
+    # @rating_array = {}
+    # @all_ratings.each do |rating|
+    #   @rating_array[rating] = !@checked_ratings.nil? && @checked_ratings.keys.include?(rating)
+    # end
     
     session[:sort] = @sort
     session[:ratings] = @checked_ratings
@@ -48,21 +48,21 @@ class MoviesController < ApplicationController
     end
     
     
-    if params[:sort] == "title"
-      @TitleClass = "hilite"
-      @ReleaseDateClass = ""
-    elsif params[:sort] == "release_date"
-      @TitleClass = ""
-      @ReleaseDateClass = "hilite"
-    else
-      @TitleClass = ""
-      @ReleaseDateClass = ""
-    end
-    
-    # @rating_array = []
-    # @movies.each do |movie_table|
-    #   @rating_array << movie_table[:rating]
+    # if params[:sort] == "title"
+    #   @TitleClass = "hilite"
+    #   @ReleaseDateClass = ""
+    # elsif params[:sort] == "release_date"
+    #   @TitleClass = ""
+    #   @ReleaseDateClass = "hilite"
+    # else
+    #   @TitleClass = ""
+    #   @ReleaseDateClass = ""
     # end
+    
+    @rating_array = []
+    @movies.each do |movie_table|
+      @rating_array << movie_table[:rating]
+    end
     
     @movies = @movies.uniq
     @ratings_to_show = @rating_array.uniq
